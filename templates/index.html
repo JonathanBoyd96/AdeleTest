@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adele Health Data Testing</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <header>
@@ -12,7 +12,7 @@
     </header>
     <div class="container">
         <h2>Fill out this form to have AI analyze your results</h2>
-        <form action="/submit" method="post">
+        <form action="https://adeletest-1.onrender.com/submit" method="post">
             <label for="age">Age</label>
             <input type="text" id="age" name="age" required>
 

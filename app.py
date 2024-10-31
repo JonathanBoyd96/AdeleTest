@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, render_template
 import sqlite3
 import uuid
 import os
@@ -14,9 +14,7 @@ def init_db():
 
 @app.route('/')
 def index():
-    # Read the index.html content and render it
-    with open('index.html') as f:
-        return render_template_string(f.read())
+    return render_template('index.html')  # Use render_template
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -37,4 +35,4 @@ def submit():
 
 if __name__ == '__main__':
     init_db()  # Initialize the database
-    app.run(host='0.0.0.0', port=5000)  # Run the app on all available interfaces
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))  # Use the port from environment variable
