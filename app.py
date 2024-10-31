@@ -1,7 +1,6 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template_string
 import sqlite3
 import uuid
-import os
 
 app = Flask(__name__)
 
@@ -14,7 +13,9 @@ def init_db():
 
 @app.route('/')
 def index():
-    return render_template('index.html')  # Use render_template
+    # Read the index.html content and render it
+    with open('index.html') as f:
+        return render_template_string(f.read())
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -31,8 +32,60 @@ def submit():
                        (unique_id, age, gender, bmi, blood_sugar))
         conn.commit()
 
-    return "Data submitted successfully!"
+    # Render the HTML page again with the submitted data
+    return render_template_string('''
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Adele Health Data Testing</title>
+            <link rel="stylesheet" href="styles.css">
+        </head>
+        <body>
+            <header>
+                <h1>Adele Health Data Testing</h1>
+            </header>
+            <div class="container">
+                <h2>Fill out this form to have AI analyze your results</h2>
+                <form action="/submit" method="post">
+                    <label for="age">Age</label>
+                    <input type="text" id="age" name="age" required>
+
+                    <label for="gender">Gender</label>
+                    <input type="text" id="gender" name="gender" required>
+
+                    <label for="bmi">BMI</label>
+                    <input type="text" id="bmi" name="bmi" required>
+
+                    <label for="bloodSugar">Blood Sugar (mg/dL)</label>
+                    <input type="text" id="bloodSugar" name="bloodSugar" required>
+
+                    <button type="submit">Submit</button>
+                </form>
+                
+                <h2>Submitted Data</h2>
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>BMI</th>
+                        <th>Blood Sugar</th>
+                    </tr>
+                    <tr>
+                        <td>{{ unique_id }}</td>
+                        <td>{{ age }}</td>
+                        <td>{{ gender }}</td>
+                        <td>{{ bmi }}</td>
+                        <td>{{ blood_sugar }}</td>
+                    </tr>
+                </table>
+            </div>
+        </body>
+        </html>
+    ''', unique_id=unique_id, age=age, gender=gender, bmi=bmi, blood_sugar=blood_sugar)
 
 if __name__ == '__main__':
     init_db()  # Initialize the database
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))  # Use the port from environment variable
+    app.run(debug=True)
