@@ -4,7 +4,9 @@ import uuid
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, origins=["https://jonathanboyd96.github.io/AdeleTest/templates/index.html"])  # Replace with your GitHub Pages URL
+
+# Allow requests from the entire GitHub Pages domain
+CORS(app, origins=["https://jonathanboyd96.github.io"])
 
 # Initialize the database
 def init_db():
@@ -44,8 +46,8 @@ def submit():
     except Exception as e:
         return f"Error: {str(e)}", 500  # Return error message for debugging
 
-    # Redirect to the index page to display the updated data
-    return index()
+    # Return a JSON response to confirm submission was successful
+    return {"status": "success"}
 
 if __name__ == '__main__':
     init_db()  # Initialize the database
