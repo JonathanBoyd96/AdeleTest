@@ -13,26 +13,13 @@ def init_db():
 
 @app.route('/')
 def index():
-    # Read the index.html content and render it
-    with open('index.html') as f:
-        return render_template_string(f.read())
-
-@app.route('/submit', methods=['POST'])
-def submit():
-    age = request.form['age']
-    gender = request.form['gender']
-    bmi = request.form['bmi']
-    blood_sugar = request.form['bloodSugar']
-    unique_id = str(uuid.uuid4())  # Generate a unique identifier
-
-    # Store the data in the database
+    # Get all data from the database
     with sqlite3.connect('database.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO health_data (id, age, gender, bmi, blood_sugar) VALUES (?, ?, ?, ?, ?)', 
-                       (unique_id, age, gender, bmi, blood_sugar))
-        conn.commit()
+        cursor.execute('SELECT * FROM health_data')
+        all_data = cursor.fetchall()  # Fetch all records
 
-    # Render the HTML page again with the submitted data
+    # Render the HTML page with the fetched data
     return render_template_string('''
         <!DOCTYPE html>
         <html lang="en">
@@ -63,28 +50,48 @@ def submit():
 
                     <button type="submit">Submit</button>
                 </form>
-                
+
                 <h2>Submitted Data</h2>
                 <table>
                     <tr>
-                        <th>ID</th>
+                        <th>Unique Identifier</th>
                         <th>Age</th>
                         <th>Gender</th>
                         <th>BMI</th>
                         <th>Blood Sugar</th>
                     </tr>
+                    {% for record in all_data %}
                     <tr>
-                        <td>{{ unique_id }}</td>
-                        <td>{{ age }}</td>
-                        <td>{{ gender }}</td>
-                        <td>{{ bmi }}</td>
-                        <td>{{ blood_sugar }}</td>
+                        <td>{{ record[0] }}</td>
+                        <td>{{ record[1] }}</td>
+                        <td>{{ record[2] }}</td>
+                        <td>{{ record[3] }}</td>
+                        <td>{{ record[4] }}</td>
                     </tr>
+                    {% endfor %}
                 </table>
             </div>
         </body>
         </html>
-    ''', unique_id=unique_id, age=age, gender=gender, bmi=bmi, blood_sugar=blood_sugar)
+    ''', all_data=all_data)
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    age = request.form['age']
+    gender = request.form['gender']
+    bmi = request.form['bmi']
+    blood_sugar = request.form['bloodSugar']
+    unique_id = str(uuid.uuid4())  # Generate a unique identifier
+
+    # Store the data in the database
+    with sqlite3.connect('database.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO health_data (id, age, gender, bmi, blood_sugar) VALUES (?, ?, ?, ?, ?)', 
+                       (unique_id, age, gender, bmi, blood_sugar))
+        conn.commit()
+
+    # Redirect to the index route to display all data
+    return index()
 
 if __name__ == '__main__':
     init_db()  # Initialize the database
