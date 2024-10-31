@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adele Health Data Testing</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
+</head>
+<body>
+    <header>
+        <h1>Adele Health Data Testing</h1>
+    </header>
+    <div class="container">
+        <h2>Fill out this form to have AI analyze your results</h2>
+        <form id="healthForm">
+            <label for="age">Age</label>
+            <input type="text" id="age" name="age" required>
+
+            <label for="gender">Gender</label>
+            <input type="text" id="gender" name="gender" required>
+
+            <label for="bmi">BMI</label>
+            <input type="text" id="bmi" name="bmi" required>
+
+            <label for="bloodSugar">Blood Sugar (mg/dL)</label>
+            <input type="text" id="bloodSugar" name="bloodSugar" required>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <h2>Submitted Data</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>BMI</th>
+                <th>Blood Sugar</th>
+            </tr>
+            <tbody id="data-table">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://your-project-id.supabase.co';
+        const SUPABASE_ANON_KEY = 'your-anon-key';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Submit form data to Supabase
+        document.getElementById('healthForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
+            const bmi = document.getElementById('bmi').value;
+            const bloodSugar = document.getElementById('bloodSugar').value;
+
+            const { data, error } = await supabase
+                .from('health_data')
+                .insert([{ age, gender, bmi, blood_sugar: bloodSugar }]);
+
+            if (error) {
+                console.error('Error:', error);
+            } else {
+                console.log('Data added:', data);
+                loadData(); // Refresh data in table
+            }
+        });
+
+        // Load data from Supabase to display in table
+        async function loadData() {
+            const { data, error } = await supabase
+                .from('health_data')
+                .select('*');
+
+            if (error) {
+                console.error('Error:', error);
+                return;
+            }
+
+            // Populate the table with data
+            const tableBody = document.getElementById('data-table');
+            tableBody.innerHTML = '';  // Clear previous entries
+            data.forEach((record) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.id}</td>
+                    <td>${record.age}</td>
+                    <td>${record.gender}</td>
+                    <td>${record.bmi}</td>
+                    <td>${record.blood_sugar}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Initial load of data
+        loadData();
+    </script>
+</body>
+</html>
