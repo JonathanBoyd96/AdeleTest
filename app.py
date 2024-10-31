@@ -1,11 +1,9 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import sqlite3
 import uuid
 from flask_cors import CORS
 
 app = Flask(__name__)
-
-# Allow requests from the entire GitHub Pages domain
 CORS(app, origins=["https://jonathanboyd96.github.io"])
 
 # Initialize the database
@@ -18,37 +16,38 @@ def init_db():
 @app.route('/')
 def index():
     try:
-        # Fetch all existing data from the database to display
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
             cursor.execute('SELECT * FROM health_data')
             data = cursor.fetchall()
     except Exception as e:
-        return f"Error: {str(e)}", 500  # Return error message for debugging
+        return f"Error: {str(e)}", 500
     
     return render_template('index.html', data=data)
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    age = request.form['age']
-    gender = request.form['gender']
-    bmi = request.form['bmi']
-    blood_sugar = request.form['bloodSugar']
-    unique_id = str(uuid.uuid4())  # Generate a unique identifier
+    # Debugging: Print incoming form data
+    print("Form data received:", request.form)
+
+    age = request.form.get('age')
+    gender = request.form.get('gender')
+    bmi = request.form.get('bmi')
+    blood_sugar = request.form.get('bloodSugar')
+
+    # Check for missing data and return a 400 error if any field is missing
+    if not age or not gender or not bmi or not blood_sugar:
+        return {"error": "Missing form data"}, 400
+
+    unique_id = str(uuid.uuid4())
 
     try:
-        # Store the data in the database
         with sqlite3.connect('database.db') as conn:
             cursor = conn.cursor()
             cursor.execute('INSERT INTO health_data (id, age, gender, bmi, blood_sugar) VALUES (?, ?, ?, ?, ?)', 
                            (unique_id, age, gender, bmi, blood_sugar))
             conn.commit()
     except Exception as e:
-        return f"Error: {str(e)}", 500  # Return error message for debugging
+        return f"Error: {str(e)}", 500
 
-    # Return a JSON response to confirm submission was successful
-    return {"status": "success"}
-
-if __name__ == '__main__':
-    init_db()  # Initialize the database
-    app.run(debug=True)
+    return jsonify({"status": "success"})
