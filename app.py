@@ -1,8 +1,10 @@
 from flask import Flask, request, redirect, render_template
+from flask_cors import CORS  # Import CORS
 import sqlite3
 import uuid
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for the entire app
 
 # Initialize the database
 def init_db():
