@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, jsonify
 from flask_cors import CORS  # Import CORS
 import sqlite3
 import uuid
@@ -26,10 +26,10 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    age = request.form['age']
-    gender = request.form['gender']
-    bmi = request.form['bmi']
-    blood_sugar = request.form['bloodSugar']
+    age = request.json['age']
+    gender = request.json['gender']
+    bmi = request.json['bmi']
+    blood_sugar = request.json['bloodSugar']
     unique_id = str(uuid.uuid4())  # Generate a unique identifier
 
     # Store the data in the database
@@ -39,8 +39,8 @@ def submit():
                        (unique_id, age, gender, bmi, blood_sugar))
         conn.commit()
 
-    # Redirect to the index page to display the updated data
-    return redirect('/')
+    # Return a JSON response
+    return jsonify({'status': 'success'})
 
 if __name__ == '__main__':
     init_db()  # Initialize the database

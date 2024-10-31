@@ -12,7 +12,7 @@
     </header>
     <div class="container">
         <h2>Fill out this form to have AI analyze your results</h2>
-        <form action="https://adeletest-1.onrender.com/submit" method="post">
+        <form id="healthDataForm">
             <label for="age">Age</label>
             <input type="text" id="age" name="age" required>
 
@@ -29,7 +29,7 @@
         </form>
 
         <h2>Submitted Data</h2>
-        <table>
+        <table id="dataTable">
             <tr>
                 <th>ID</th>
                 <th>Age</th>
@@ -37,16 +37,54 @@
                 <th>BMI</th>
                 <th>Blood Sugar</th>
             </tr>
-            {% for record in data %}
-            <tr>
-                <td>{{ record[0] }}</td>
-                <td>{{ record[1] }}</td>
-                <td>{{ record[2] }}</td>
-                <td>{{ record[3] }}</td>
-                <td>{{ record[4] }}</td>
-            </tr>
-            {% endfor %}
+            <!-- Data rows will be inserted here -->
         </table>
     </div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('healthDataForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Gather form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            // Send POST request to Flask backend
+            await fetch('https://adeletest-1.onrender.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            // Fetch updated data and update the table
+            fetchData();
+        });
+
+        // Function to fetch and display data
+        async function fetchData() {
+            const response = await fetch('https://adeletest-1.onrender.com/'); // Get existing data
+            const html = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const dataRows = doc.querySelectorAll('#dataTable tr'); // Get rows from the fetched HTML
+
+            const table = document.getElementById('dataTable');
+            // Clear existing data
+            table.innerHTML = '<tr><th>ID</th><th>Age</th><th>Gender</th><th>BMI</th><th>Blood Sugar</th></tr>'; 
+
+            // Append new rows
+            dataRows.forEach((row, index) => {
+                if (index > 0) { // Skip header row
+                    table.appendChild(row.cloneNode(true)); // Clone and append the row
+                }
+            });
+        }
+
+        // Fetch initial data on page load
+        fetchData();
+    </script>
 </body>
 </html>
