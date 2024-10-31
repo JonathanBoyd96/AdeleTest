@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template_string
+from flask import Flask, request, redirect, render_template
 import sqlite3
 import uuid
 
@@ -19,9 +19,8 @@ def index():
         cursor.execute('SELECT * FROM health_data')
         data = cursor.fetchall()
     
-    # Read the index.html content and render it with existing data
-    with open('index.html') as f:
-        return render_template_string(f.read(), data=data)
+    # Render the index.html template with existing data
+    return render_template('index.html', data=data)
 
 @app.route('/submit', methods=['POST'])
 def submit():
@@ -39,8 +38,8 @@ def submit():
         conn.commit()
 
     # Redirect to the index page to display the updated data
-    return index()
+    return redirect('/')
 
 if __name__ == '__main__':
     init_db()  # Initialize the database
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)  # Make sure Flask is accessible
