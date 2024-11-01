@@ -48,7 +48,7 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1idHBoZ29jemJsaXh4enpubHpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MDc0NzYsImV4cCI6MjA0NTk4MzQ3Nn0.VvejXag2L4zlxgPe2bbw98VwCb2aAopJnPv9d5H53Ms';  // Replace with your Supabase ANON key
 
         // Initialize Supabase client
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = supabase.createClient('https://mbtphgoczblixxzznlzs.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1idHBoZ29jemJsaXh4enpubHpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MDc0NzYsImV4cCI6MjA0NTk4MzQ3Nn0.VvejXag2L4zlxgPe2bbw98VwCb2aAopJnPv9d5H53Ms');
 
         // Submit form data to Supabase
         document.getElementById('healthForm').addEventListener('submit', async (event) => {
