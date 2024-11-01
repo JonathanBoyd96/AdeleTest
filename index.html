@@ -44,12 +44,13 @@
     </div>
 
     <script>
+        // Wrapping the entire code in a self-contained function to avoid scope issues
         document.addEventListener("DOMContentLoaded", () => {
-            const SUPABASE_URL = 'https://mbtphgoczblixxzznlzs.supabase.co';  // Replace with your Supabase URL
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1idHBoZ29jemJsaXh4enpubHpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MDc0NzYsImV4cCI6MjA0NTk4MzQ3Nn0.VvejXag2L4zlxgPe2bbw98VwCb2aAopJnPv9d5H53Ms';  // Replace with your Supabase ANON key
+            const SUPABASE_URL = 'https://mbtphgoczblixxzznlzs.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1idHBoZ29jemJsaXh4enpubHpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MDc0NzYsImV4cCI6MjA0NTk4MzQ3Nn0.VvejXag2L4zlxgPe2bbw98VwCb2aAopJnPv9d5H53Ms';
 
-            // Initialize Supabase client
-            const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            // Rename the client variable to avoid conflicts
+            const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
             // Submit form data to Supabase
             document.getElementById('healthForm').addEventListener('submit', async (event) => {
@@ -59,7 +60,7 @@
                 const bmi = document.getElementById('bmi').value;
                 const bloodSugar = document.getElementById('bloodSugar').value;
 
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('health_data')
                     .insert([{ age, gender, bmi, blood_sugar: bloodSugar }]);
 
@@ -73,7 +74,7 @@
 
             // Load data from Supabase to display in table
             async function loadData() {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('health_data')
                     .select('*');
 
