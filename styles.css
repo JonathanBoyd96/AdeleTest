@@ -9,7 +9,6 @@ header {
     background: #35424a;
     color: #ffffff;
     padding: 10px 0;
-    text-align: center;
 }
 
 .container {
@@ -107,4 +106,56 @@ h2 {
         padding: 8px;
         word-wrap: break-word;
     }
+}
+
+/* Navigation Bar Styling */
+nav {
+    background-color: #35424a;
+    color: #ffffff;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* User Info Styling */
+#user-info {
+    position: absolute; /* Positioning the user info */
+    top: 10px; /* Distance from the top */
+    right: 20px; /* Distance from the right */
+    text-align: right; /* Align text to the right */
+}
+
+#user-info button {
+    margin-left: 20px; /* Increased left margin for spacing */
+}
+
+/* Add this to your existing CSS */
+#button-container {
+    display: flex; /* Use flexbox for layout */
+    justify-content: center; /* Center the buttons horizontally */
+    margin-top: 15px; /* Add some space above the buttons */
+}
+
+#button-container button {
+    margin-left: 10px; /* Add space between buttons */
 }

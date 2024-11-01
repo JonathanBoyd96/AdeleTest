@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adele Health Data - Data Input</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
+</head>
+<body>
+    <header>
+        <h1>Adele Health Data - Data Input</h1>
+        <div id="user-info">
+            <span id="welcome-message"></span>
+            <button id="signout-btn" style="display: none;">Sign Out</button>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="data_input.html">Data Input</a></li>
+            <li><a href="quiz.html">Daily Health Quiz</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2>Fill out this form to have AI analyze your results</h2>
+        <form id="healthForm">
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" required min="0" step="1" style="appearance: none;">
+
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+
+            <label for="bmi">BMI</label>
+            <input type="number" id="bmi" name="bmi" required min="0" step="0.1" style="appearance: none;">
+
+            <label for="bloodSugar">Blood Sugar (mg/dL)</label>
+            <input type="number" id="bloodSugar" name="bloodSugar" required min="0" step="0.1" style="appearance: none;">
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <h2>Submitted Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>BMI</th>
+                    <th>Blood Sugar</th>
+                </tr>
+            </thead>
+            <tbody id="data-table">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://mbtphgoczblixxzznlzs.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1idHBoZ29jemJsaXh4enpubHpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MDc0NzYsImV4cCI6MjA0NTk4MzQ3Nn0.VvejXag2L4zlxgPe2bbw98VwCb2aAopJnPv9d5H53Ms';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            const welcomeMessage = document.getElementById("welcome-message");
+            const signoutButton = document.getElementById("signout-btn");
+
+            if (!session) {
+                window.location.href = "login.html"; // Redirect to login if not signed in
+                return;
+            }
+
+            const user = session.user;
+            welcomeMessage.textContent = `Welcome, ${user.email}`;
+            signoutButton.style.display = "inline";
+
+            signoutButton.addEventListener("click", async () => {
+                await supabaseClient.auth.signOut();
+                window.location.href = "login.html";
+            });
+
+            // Submit form data to Supabase
+            document.getElementById('healthForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const age = document.getElementById('age').value;
+                const gender = document.getElementById('gender').value;
+                const bmi = document.getElementById('bmi').value;
+                const bloodSugar = document.getElementById('bloodSugar').value;
+
+                const { data, error } = await supabaseClient
+                    .from('health_data')
+                    .insert([{ age, gender, bmi, blood_sugar: bloodSugar, user_id: user.id }]);
+
+                if (error) {
+                    console.error('Error:', error);
+                } else {
+                    loadData(); // Refresh data in table
+                }
+            });
+
+            // Load only signed-in user's data
+            async function loadData() {
+                const { data, error } = await supabaseClient
+                    .from('health_data')
+                    .select('*')
+                    .eq('user_id', user.id);
+
+                if (error) {
+                    console.error('Error:', error);
+                    return;
+                }
+
+                const tableBody = document.getElementById('data-table');
+                tableBody.innerHTML = '';
+                data.forEach((record) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${record.id}</td>
+                        <td>${record.age}</td>
+                        <td>${record.gender}</td>
+                        <td>${record.bmi}</td>
+                        <td>${record.blood_sugar}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            loadData(); // Initial load
+        });
+    </script>
+</body>
+</html>
