@@ -1,3 +1,4 @@
+/* General Styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -21,6 +22,7 @@ header {
 
 h1, h2 {
     margin-bottom: 20px;
+    text-align: center;
 }
 
 label {
@@ -48,4 +50,55 @@ button {
 
 button:hover {
     background-color: #45a049;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: #35424a;
+    color: white;
+}
+
+/* Row hover effect */
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Responsive Styling */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+        box-shadow: none;
+    }
+
+    h1, h2 {
+        font-size: 1.5em;
+    }
+
+    input {
+        font-size: 14px;
+        padding: 6px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    th, td {
+        font-size: 13px;
+        padding: 8px;
+        word-wrap: break-word;
+    }
 }

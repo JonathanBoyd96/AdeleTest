@@ -15,41 +15,41 @@
         <h2>Fill out this form to have AI analyze your results</h2>
         <form id="healthForm">
             <label for="age">Age</label>
-            <input type="text" id="age" name="age" required>
+            <input type="number" id="age" name="age" required>
 
             <label for="gender">Gender</label>
             <input type="text" id="gender" name="gender" required>
 
             <label for="bmi">BMI</label>
-            <input type="text" id="bmi" name="bmi" required>
+            <input type="number" step="0.1" id="bmi" name="bmi" required>
 
             <label for="bloodSugar">Blood Sugar (mg/dL)</label>
-            <input type="text" id="bloodSugar" name="bloodSugar" required>
+            <input type="number" step="0.1" id="bloodSugar" name="bloodSugar" required>
 
             <button type="submit">Submit</button>
         </form>
 
         <h2>Submitted Data</h2>
         <table>
-            <tr>
-                <th>ID</th>
-                <th>Age</th>
-                <th>Gender</th>
-                <th>BMI</th>
-                <th>Blood Sugar</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>BMI</th>
+                    <th>Blood Sugar</th>
+                </tr>
+            </thead>
             <tbody id="data-table">
             </tbody>
         </table>
     </div>
 
     <script>
-        // Wrapping the entire code in a self-contained function to avoid scope issues
         document.addEventListener("DOMContentLoaded", () => {
             const SUPABASE_URL = 'https://mbtphgoczblixxzznlzs.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1idHBoZ29jemJsaXh4enpubHpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MDc0NzYsImV4cCI6MjA0NTk4MzQ3Nn0.VvejXag2L4zlxgPe2bbw98VwCb2aAopJnPv9d5H53Ms';
 
-            // Rename the client variable to avoid conflicts
             const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
             // Submit form data to Supabase
