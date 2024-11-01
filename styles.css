@@ -57,12 +57,13 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    border: 1px solid #ddd; /* Add border around the table */
 }
 
 th, td {
     padding: 12px;
     border: 1px solid #ddd;
-    text-align: center;
+    text-align: center; /* Center align text */
 }
 
 th {
@@ -73,6 +74,11 @@ th {
 /* Row hover effect */
 tr:hover {
     background-color: #f1f1f1;
+}
+
+/* Center the "Submitted Data" header */
+h2 {
+    text-align: center; /* Center the header text */
 }
 
 /* Responsive Styling */
