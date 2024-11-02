@@ -56,13 +56,13 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    border: 1px solid #ddd; /* Add border around the table */
+    border: 1px solid #ddd;
 }
 
 th, td {
     padding: 12px;
     border: 1px solid #ddd;
-    text-align: center; /* Center align text */
+    text-align: center;
 }
 
 th {
@@ -70,14 +70,12 @@ th {
     color: white;
 }
 
-/* Row hover effect */
 tr:hover {
     background-color: #f1f1f1;
 }
 
-/* Center the "Submitted Data" header */
 h2 {
-    text-align: center; /* Center the header text */
+    text-align: center;
 }
 
 /* Responsive Styling */
@@ -87,8 +85,13 @@ h2 {
         box-shadow: none;
     }
 
-    h1, h2 {
-        font-size: 1.5em;
+    h1 {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        font-size: 1.4em;
     }
 
     input {
@@ -106,9 +109,62 @@ h2 {
         padding: 8px;
         word-wrap: break-word;
     }
+
+    /* Bottom Navigation Bar for Mobile */
+    nav {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background-color: #35424a;
+        color: #ffffff;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    nav ul {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    nav ul li {
+        flex: 1;
+        text-align: center;
+    }
+
+    nav ul li:nth-child(2) a {
+        background-color: #45a049;
+        color: white;
+        padding: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        line-height: 30px;
+        font-size: 1.2em;
+    }
+
+    nav ul li a {
+        color: #ffffff;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    nav ul li a:hover {
+        text-decoration: underline;
+    }
 }
 
-/* Navigation Bar Styling */
+/* Navigation Bar Styling for Desktop */
 nav {
     background-color: #35424a;
     color: #ffffff;
@@ -139,23 +195,24 @@ nav ul li a:hover {
 
 /* User Info Styling */
 #user-info {
-    position: absolute; /* Positioning the user info */
-    top: 10px; /* Distance from the top */
-    right: 20px; /* Distance from the right */
-    text-align: right; /* Align text to the right */
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    text-align: right;
 }
 
 #user-info button {
-    margin-left: 20px; /* Increased left margin for spacing */
+    margin-left: 20px;
 }
 
-/* Add this to your existing CSS */
+/* Button Container Styling */
 #button-container {
-    display: flex; /* Use flexbox for layout */
-    justify-content: center; /* Center the buttons horizontally */
-    margin-top: 15px; /* Add some space above the buttons */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
 }
 
 #button-container button {
-    margin-left: 10px; /* Add space between buttons */
+    flex: 1;
 }
