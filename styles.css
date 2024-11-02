@@ -9,6 +9,23 @@ header {
     background: #35424a;
     color: #ffffff;
     padding: 10px 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* Centering the H1 */
+header h1 {
+    flex-grow: 1; /* Allow the H1 to take up available space */
+    text-align: center; /* Center the text */
+    margin: 0; /* Remove default margin */
+}
+
+.hamburger {
+    cursor: pointer; /* Show pointer on hover */
+    font-size: 24px; /* Increase icon size */
+    margin-left: 10px; /* Add margin to the left */
+    padding-right: 10px;
 }
 
 .container {
@@ -16,12 +33,11 @@ header {
     margin: 20px auto;
     padding: 20px;
     background: #ffffff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 h1, h2 {
     margin-bottom: 20px;
-    text-align: center;
 }
 
 label {
@@ -78,6 +94,39 @@ h2 {
     text-align: center;
 }
 
+/* User Info Styling */
+#user-info {
+    display: flex; /* Align items in a row */
+    justify-content: flex-end; /* Align to the right */
+    align-items: center; /* Center vertically */
+    position: relative; /* Position relative for dropdown */
+}
+
+.dropdown {
+    position: absolute; /* Position dropdown relative to user-info */
+    top: 40px; /* Adjust dropdown position */
+    right: 0; /* Align to the right */
+    background-color: white; /* White background for dropdown */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    border-radius: 4px; /* Rounded corners */
+    display: none; /* Hidden by default */
+    z-index: 1000; /* Ensure dropdown is above other elements */
+}
+
+#signout-btn {
+    display: block; /* Block display for the button */
+    width: 100%; /* Full width of dropdown */
+    padding: 10px; /* Padding */
+    border: none; /* No border */
+    background-color: #35424a; /* Button color */
+    color: white; /* Text color */
+    cursor: pointer; /* Pointer on hover */
+}
+
+#signout-btn:hover {
+    background-color: #45a049; /* Change color on hover */
+}
+
 /* Responsive Styling */
 @media (max-width: 600px) {
     .container {
@@ -86,8 +135,10 @@ h2 {
     }
 
     h1 {
-        font-size: 1.8em;
-        margin-bottom: 15px;
+        padding: 20px 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     h2 {
@@ -110,6 +161,13 @@ h2 {
         word-wrap: break-word;
     }
 
+    #user-info {
+        flex-direction: row; /* Keep in a row on small screens */
+        margin-top: 5px;
+        margin-left: 60px;
+        text-align: center;
+    }
+
     /* Bottom Navigation Bar for Mobile */
     nav {
         display: flex;
@@ -127,7 +185,7 @@ h2 {
 
     nav ul {
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
         width: 100%;
         list-style-type: none;
@@ -135,16 +193,24 @@ h2 {
         padding: 0;
     }
 
+    /* Navigation Links Styling */
     nav ul li {
         flex: 1;
         text-align: center;
+    }
+
+    /* Centered Home Button Styling */
+    nav ul li:nth-child(2) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     nav ul li:nth-child(2) a {
         background-color: #45a049;
         color: white;
         padding: 10px;
-        border-radius: 50%;
+        border-radius: 20%;
         display: inline-block;
         width: 50px;
         height: 50px;
@@ -191,18 +257,6 @@ nav ul li a {
 
 nav ul li a:hover {
     text-decoration: underline;
-}
-
-/* User Info Styling */
-#user-info {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    text-align: right;
-}
-
-#user-info button {
-    margin-left: 20px;
 }
 
 /* Button Container Styling */

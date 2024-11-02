@@ -3,30 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adele Health Data - Quiz</title>
+    <title>Adele Health Data - Daily Health Quiz</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/@supabase/supabase-js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header>
         <h1>Adele Health Data - Daily Health Quiz</h1>
-        <div id="user-info">
-            <span id="welcome-message"></span>
-            <button id="signout-btn" style="display: none;">Sign Out</button>
+        <div class="hamburger" id="hamburger-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="dropdown" id="dropdown-menu" style="display: none;">
+            <button id="signout-btn">Sign Out</button>
         </div>
     </header>
 
     <nav>
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="data_input.html">Data Input</a></li>
-            <li><a href="quiz.html">Daily Health Quiz</a></li>
+            <li><a href="data_input.html"><i class="fas fa-database"></i> Data Input</a></li>
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="quiz.html"><i class="fas fa-question-circle"></i> Daily Quiz</a></li>
         </ul>
     </nav>
 
     <div class="container">
-        <h2>Here you will be prompted to enter a few questions about your day so we can capture key health data to improve your journey.</h2>
-        <!-- Quiz form and script as in the previous example -->
+        <h2>Welcome to the Daily Health Quiz!</h2>
+        <p>Answer a few questions about your day to help us capture key health data and enhance your wellness journey.</p>
+        
+        <!-- Quiz form -->
+        <form id="quiz-form">
+            <label for="sleep">How many hours did you sleep last night?</label>
+            <input type="number" id="sleep" name="sleep" required>
+
+            <label for="water">How many glasses of water did you drink today?</label>
+            <input type="number" id="water" name="water" required>
+
+            <label for="exercise">How long did you exercise today? (in minutes)</label>
+            <input type="number" id="exercise" name="exercise" required>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <!-- Success message -->
+        <p id="success-message" style="display:none;">Thank you! Your responses have been recorded.</p>
     </div>
 
     <script>
@@ -36,21 +56,57 @@
 
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
-            const welcomeMessage = document.getElementById("welcome-message");
             const signoutButton = document.getElementById("signout-btn");
+            const dropdownMenu = document.getElementById("dropdown-menu");
+            const hamburgerMenu = document.getElementById("hamburger-menu");
 
+            // Check for active session
             if (!session) {
                 window.location.href = "login.html"; // Redirect to login if not signed in
                 return;
             }
 
             const user = session.user;
-            welcomeMessage.textContent = `Welcome, ${user.email}`;
-            signoutButton.style.display = "inline";
+
+            // Show hamburger menu
+            hamburgerMenu.style.display = "block";
+
+            // Toggle dropdown menu on click
+            hamburgerMenu.addEventListener("click", () => {
+                dropdownMenu.style.display = dropdownMenu.style.display === "none" ? "block" : "none";
+            });
 
             signoutButton.addEventListener("click", async () => {
                 await supabaseClient.auth.signOut();
                 window.location.href = "login.html";
+            });
+
+            // Handle quiz form submission
+            const quizForm = document.getElementById("quiz-form");
+            const successMessage = document.getElementById("success-message");
+
+            quizForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+                const sleep = document.getElementById("sleep").value;
+                const water = document.getElementById("water").value;
+                const exercise = document.getElementById("exercise").value;
+
+                const { error } = await supabaseClient
+                    .from('health_data')
+                    .insert([
+                        { user_id: user.id, sleep, water, exercise }
+                    ]);
+
+                if (error) {
+                    console.error('Error recording data:', error);
+                    alert("An error occurred. Please try again.");
+                } else {
+                    quizForm.reset();
+                    successMessage.style.display = "block";
+                    setTimeout(() => {
+                        successMessage.style.display = "none";
+                    }, 3000);
+                }
             });
         });
     </script>

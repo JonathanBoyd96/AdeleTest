@@ -1,12 +1,14 @@
 // Supabase setup
 const SUPABASE_URL = 'https://mbtphgoczblixxzznlzs.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1idHBoZ29jemJsaXh4enpubHpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MDc0NzYsImV4cCI6MjA0NTk4MzQ3Nn0.VvejXag2L4zlxgPe2bbw98VwCb2aAopJnPv9d5H53Ms';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1idHBoZ29jemJsaXh4enpubHpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0MDc0NzYsImV4cCI6MjA0NTk4MzQ3Nn0.VvejXag2L4zlxgPe2bbw98VwCb2aAopJnPv9d5H53Ms';
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // DOM Elements
 const userInfo = document.getElementById("user-info");
 const welcomeMessage = document.getElementById("welcome-message");
 const signoutButton = document.getElementById("signout-btn");
+const dropdownMenu = document.getElementById("dropdown-menu");
+const hamburgerMenu = document.getElementById("hamburger-menu");
 
 // Check session and display user info
 async function checkSession() {
@@ -22,6 +24,11 @@ async function checkSession() {
         window.location.href = "login.html";
     }
 }
+
+// Toggle dropdown menu on hamburger menu click
+hamburgerMenu.addEventListener("click", () => {
+    dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+});
 
 // Event listener for signing out
 signoutButton.addEventListener("click", async () => {

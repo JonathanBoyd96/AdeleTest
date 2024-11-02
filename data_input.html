@@ -6,21 +6,24 @@
     <title>Adele Health Data - Data Input</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/@supabase/supabase-js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header>
         <h1>Adele Health Data - Data Input</h1>
-        <div id="user-info">
-            <span id="welcome-message"></span>
-            <button id="signout-btn" style="display: none;">Sign Out</button>
+        <div class="hamburger" id="hamburger-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="dropdown" id="dropdown-menu" style="display: none;">
+            <button id="signout-btn">Sign Out</button>
         </div>
     </header>
 
     <nav>
         <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="data_input.html">Data Input</a></li>
-            <li><a href="quiz.html">Daily Health Quiz</a></li>
+            <li><a href="data_input.html"><i class="fas fa-database"></i> Data Input</a></li>
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="quiz.html"><i class="fas fa-question-circle"></i> Daily Quiz</a></li>
         </ul>
     </nav>
 
@@ -68,17 +71,22 @@
 
         document.addEventListener("DOMContentLoaded", async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
-            const welcomeMessage = document.getElementById("welcome-message");
             const signoutButton = document.getElementById("signout-btn");
+            const dropdownMenu = document.getElementById("dropdown-menu");
+            const hamburgerMenu = document.getElementById("hamburger-menu");
 
             if (!session) {
                 window.location.href = "login.html"; // Redirect to login if not signed in
                 return;
             }
 
-            const user = session.user;
-            welcomeMessage.textContent = `Welcome, ${user.email}`;
-            signoutButton.style.display = "inline";
+            // Show hamburger menu
+            hamburgerMenu.style.display = "block";
+
+            // Toggle dropdown menu on click
+            hamburgerMenu.addEventListener("click", () => {
+                dropdownMenu.style.display = dropdownMenu.style.display === "none" ? "block" : "none";
+            });
 
             signoutButton.addEventListener("click", async () => {
                 await supabaseClient.auth.signOut();
@@ -95,7 +103,7 @@
 
                 const { data, error } = await supabaseClient
                     .from('health_data')
-                    .insert([{ age, gender, bmi, blood_sugar: bloodSugar, user_id: user.id }]);
+                    .insert([{ age, gender, bmi, blood_sugar: bloodSugar, user_id: session.user.id }]);
 
                 if (error) {
                     console.error('Error:', error);
@@ -109,7 +117,7 @@
                 const { data, error } = await supabaseClient
                     .from('health_data')
                     .select('*')
-                    .eq('user_id', user.id);
+                    .eq('user_id', session.user.id);
 
                 if (error) {
                     console.error('Error:', error);
